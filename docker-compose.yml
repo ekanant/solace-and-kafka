@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+  zookeeper:
+    image: "debezium/zookeeper:2.0.0.Final"
+    restart: "always"
+    networks:
+      - "kafka_cluster"
+    volumes:
+      - "./docker-data/zookeeper/data:/zookeeper/data"
+      - "./docker-data/zookeeper/txns:/zookeeper/txns"
+  kafka:
+    image: "debezium/kafka:2.0.0.Final"
+    restart: "always"
+    depends_on:
+      - "zookeeper"
+    networks:
+      - "kafka_cluster"
+    ports:
+      - "9092:9092"
+    environment:
+      - "ZOOKEEPER_CONNECT=zookeeper:2181"
+      - "KAFKA_LISTENERS=LISTENER_INTERNAL://kafka:29092,LISTENER_EXTERNAL://0.0.0.0:9092" # Bind 29092 for internal docker communication, 9092 for external
+      - "KAFKA_ADVERTISED_LISTENERS=LISTENER_INTERNAL://kafka:29092***REMOVED***" # Bind 29092 for internal docker communication, 9092 for external
+      - "KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT"
+      - "KAFKA_DELETE_TOPIC_ENABLE=true"
+      - "KAFKA_INTER_BROKER_LISTENER_NAME=LISTENER_INTERNAL"
+    volumes:
+      - "./docker-data/kafka/data:/kafka/data"
+      - "./docker-data/kafka/logs:/kafka/logs"
+  kafka-ui:
+    image: "provectuslabs/kafka-ui:latest"
+    depends_on:
+      - "kafka"
+    networks:
+      - "kafka_cluster"
+    ports:
+      - "9000:8080"
+    restart: always
+    environment:
+      - "KAFKA_CLUSTERS_0_NAME=local"
+      - "KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092"
+      - "KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181"
+networks:
+  kafka_cluster:
