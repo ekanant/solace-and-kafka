@@ -20,7 +20,7 @@ services:
     environment:
       - "ZOOKEEPER_CONNECT=zookeeper:2181"
       - "KAFKA_LISTENERS=LISTENER_INTERNAL://kafka:29092,LISTENER_EXTERNAL://0.0.0.0:9092" # Bind 29092 for internal docker communication, 9092 for external
-      - "KAFKA_ADVERTISED_LISTENERS=LISTENER_INTERNAL://kafka:29092***REMOVED***" # Bind 29092 for internal docker communication, 9092 for external
+      - "KAFKA_ADVERTISED_LISTENERS=LISTENER_INTERNAL://kafka:29092" # Bind 29092 for internal docker communication, 9092 for external
       - "KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT"
       - "KAFKA_DELETE_TOPIC_ENABLE=true"
       - "KAFKA_INTER_BROKER_LISTENER_NAME=LISTENER_INTERNAL"
