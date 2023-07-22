@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   primary:
-    image: "solace/solace-pubsub-standard:10.1.1.29"
+    image: "solace/solace-pubsub-standard:10.4.1.69"
     volumes:
       - "./docker-data/solace:/var/lib/solace"
     shm_size: 1g
@@ -55,6 +55,3 @@ services:
       - username_admin_globalaccesslevel=admin
       - username_admin_password=admin
       - system_scaling_maxconnectioncount=100
-
-volumes:
-  storage-group:
